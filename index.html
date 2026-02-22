@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stela Technik - Подбор оборудования</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #222222);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { width: 100%; max-width: 500px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 24px; color: #ff6b00; margin: 0; }
+        .header p { font-size: 14px; opacity: 0.8; }
+        
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background-color: var(--tg-theme-button-color, #ff6b00);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+        }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☄️ СТЕЛА</h1>
+            <p>Ваш инженер-консультант Стелла-Техник</p>
+        </div>
+
+        <div class="card">
+            <h3>📏 Быстрый подбор</h3>
+            <div class="input-group">
+                <label>Что ищем?</label>
+                <select id="type">
+                    <option value="тележка">Тележка</option>
+                    <option value="колесо">Колесо</option>
+                    <option value="рохля">Рохля (гидравлическая)</option>
+                    <option value="штабелер">Штабелер</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Макс. нагрузка (кг)</label>
+                <input type="number" id="weight" placeholder="Например: 200">
+            </div>
+            <button class="btn" onclick="sendData()">Найти оборудование ⚡️</button>
+        </div>
+
+        <div class="card">
+            <h3>📞 Заказать звонок</h3>
+            <p>Оставьте телефон, и мы перезвоним за 10 минут.</p>
+            <input type="tel" id="phone" placeholder="+7 (___) ___-__-__">
+            <button class="btn" style="background-color: #333;" onclick="sendCall()">Жду звонка</button>
+        </div>
+
+        <div class="footer">
+            Stella Technik © 2026. Работает на базе OpenClaw.
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function sendData() {
+            let type = document.getElementById('type').value;
+            let weight = document.getElementById('weight').value;
+            let data = {
+                action: 'search',
+                query: `${type} ${weight}кг`
+            };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        function sendCall() {
+            let phone = document.getElementById('phone').value;
+            if(!phone) return alert('Введите номер!');
+            let data = {
+                action: 'callback',
+                phone: phone
+            };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
